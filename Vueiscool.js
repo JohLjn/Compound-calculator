@@ -3,12 +3,11 @@ const app = Vue.createApp({});
 app.component("calculate-container", {
   data() {
     return {
-      startValue: 10000,
+      startValue: 20000,
       timeSaving: 10,
       monthlySaving: 1000,
-      totalValue: 0,
-      interestRate: 0.05,
-      totalValue: 0,
+      interestRate: 0.07,
+      futureValue: new Intl.NumberFormat("sv-SE").format(213278),
     };
   },
 
@@ -35,7 +34,7 @@ app.component("calculate-container", {
   </div>
   <div id="result-container">
   <h3>Resultatet hade genererat dig följande efter {{ timeSaving }} år av sparande:</h3>
-  <h3 id="sum-value">{{ totalValue }} kr</h3>
+  <h3 id="sum-value">{{ futureValue }} kr</h3>
 </div>
    `,
 
@@ -63,8 +62,18 @@ app.component("calculate-container", {
 
   methods: {
     calculator() {
-      this.totalValue =
-        this.test123 * (1 + this.interestRate / 100) ** this.timeSaving;
+      this.futureValue =
+        this.startValue *
+        Math.pow(1 + this.interestRate / 12, this.timeSaving * 12);
+      this.futureValue = new Intl.NumberFormat("sv-SE").format(
+        Math.trunc(
+          this.futureValue +
+            (this.monthlySaving *
+              (Math.pow(1 + this.interestRate / 12, this.timeSaving * 12) -
+                1)) /
+              (this.interestRate / 12)
+        )
+      );
     },
   },
 });
